@@ -1,6 +1,6 @@
 <template>
   <div class="quiz-component">
-    <h1>{{questions[currentQuestion].text}}</h1>
+    <h1 class="question">{{questions[currentQuestion].text}}</h1>
     <v-row>
     <v-col v-for="option in currentOptions" :key="option">
       <v-btn class="optn-btn">{{option}}</v-btn>
@@ -30,3 +30,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.quiz-component {
+  background-color: aliceblue;
+}
+.question {
+  margin-left: 4em;
+  color: rgb(145, 145, 138);
+}
+</style>
