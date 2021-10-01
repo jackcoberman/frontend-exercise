@@ -4,19 +4,31 @@
       <h1 class="question">{{question.text}}</h1>
       <v-row class="answer-row">
         <v-col v-for="option in currentOptions" :key="option">
-          <v-btn class="optn-btn" @click="setResponse(option)">{{option}}</v-btn>
+          <v-btn v-if="isSelected(option)" class="optn-btn-selected" @click="setResponse(option)">
+            <span class="optn-text">{{option}}</span>
+          </v-btn>
+          <v-btn v-else class="optn-btn" @click="setResponse(option)">
+            <span class="optn-text">{{option}}</span>
+          </v-btn>
         </v-col>
       </v-row>
       <v-row class="next-row">
-        <v-btn class="next-btn" @click="next">Next</v-btn>
+        <v-col class="next-col" align="end">
+          <v-btn class="next-btn" :class="{'next-btn-can-next': canNext}" @click="next">
+            <span class="next-btn-text">Next</span>
+          </v-btn>
+        </v-col>
       </v-row>
     </div>
     <div v-else>
-      <h1 @click="displayStuff">Results</h1>
+      <h1>Results</h1>
       <v-row class="results-row" v-for="(response,index) in responses" :key="response">
-        <div>{{index+1}}) {{questions[index].text}}</div>
-        <br>
-        <div>{{response}}</div>
+        <v-col>
+            <div>{{index+1}}) {{questions[index].text}}</div>
+        </v-col>
+        <v-col>
+          <div>{{response}}</div>
+        </v-col>
       </v-row>
     </div>
   </div>
@@ -38,26 +50,21 @@ export default {
   },
   methods: {
     setResponse (option) {
-      if (Boolean(this.responses[this.currentIndex] == null)) {
+      if (this.responses[this.currentIndex] == undefined) {
         this.responses.push(option);
-        console.log(this.responses);
+      } else if (this.responses[this.currentIndex] == option) {
+        this.responses.pop();
       } else {
-        console.log(option);
-        console.log(this.currentIndex);
-        this.responses[this.currentIndex] = option;
-        console.log(this.responses[this.currentIndex]);
+        this.responses.pop();
+        this.responses.push(option);
       }
     },
     next () {
-      if (Boolean(this.responses[this.currentIndex] == null)) return;
+      if (this.responses[this.currentIndex] == undefined) return;
       this.currentIndex++;
     },
-    displayStuff () {
-      console.log(this.responses.length);
-      console.log(this.responses[0]);
-      console.log(this.responses[1]);
-      console.log(this.responses[2]);
-      console.log(this.responses.length); 
+    isSelected (option) {
+      return this.responses[this.currentIndex] == option;
     }
   },
   computed: {
@@ -68,7 +75,6 @@ export default {
       return this.questions[this.currentIndex].answers;
     },
     canNext () {
-      console.log(Boolean(this.responses[this.currentIndex]));
       return Boolean(this.responses[this.currentIndex]);
     },
     hasRemainingQuestion () {
@@ -87,20 +93,40 @@ export default {
   padding-top: 10em;
 }
 .question {
-  color: rgb(145, 145, 138);
+  color: #48606E;
 }
 .answer-row {
-  padding-top: 3em;
-}
-.next-row {
+  padding-top: 2em;
+  width: 50%;
 }
 .results-row {
   margin-top: 2em;
 }
 .optn-btn {
   text-transform: none;
+  background-color: #22282B !important;
+}
+.optn-btn-selected {
+  text-transform: none;
+  background-color: #4e5a61 !important;
+}
+.optn-text {
+  font-size: 20px;
+  color: white;
+}
+.next-col {
+  padding-right: 10em;
+  padding-top: 2em;
 }
 .next-btn {
   text-transform: none;
+  background-color: #BFD0D8 !important;
+}
+.next-btn-can-next {
+  text-transform: none;
+  background-color: #84A5B7 !important;
+}
+.next-btn-text {
+  color: white;
 }
 </style>
